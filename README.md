@@ -1,90 +1,138 @@
-# AI-Assisted Shopify Theme Development
+# AI-Generated Shopify Theme
 
-This project provides tools and resources for creating Shopify themes with AI assistance. It demonstrates how large language models like Claude can help streamline the Shopify theme development process.
-
-## What's Included
-
-1. **ShopifyAI-SuperPrompt.md** - A specially crafted prompt template for AI assistants to help generate Shopify theme code.
-
-2. **create-shopify-theme.sh** - A CLI script that automates the creation of a Shopify theme with all necessary files and directories.
-
-3. **Example Theme Structure** - A complete Shopify theme structure with modern, responsive design using Tailwind CSS.
-
-## Why Use AI for Shopify Theme Development?
-
-Developing Shopify themes traditionally requires expertise in Liquid templating, CSS, JavaScript, and e-commerce design patterns. AI assistance can:
-
-- **Accelerate Development**: Generate boilerplate code and common components quickly
-- **Reduce Errors**: Ensure proper Shopify theme structure and valid schema settings
-- **Enable Non-Experts**: Allow those with limited Liquid knowledge to create professional themes
-- **Explore Design Options**: Quickly iterate through different design approaches and components
-- **Maintain Consistency**: Ensure consistent styling and behavior across the theme
-
-## Getting Started
-
-### Using the CLI Script
-
-1. Make sure you have Node.js and npm installed
-2. Install the Shopify CLI: `npm install -g @shopify/cli @shopify/theme`
-3. Run the script: `./create-shopify-theme.sh`
-4. Follow the prompts to configure your theme
-5. Deploy to Shopify:
-   ```
-   cd your-theme-directory
-   shopify theme push --store=your-store.myshopify.com
-   ```
-
-### Using AI Assistance
-
-1. Copy the content from ShopifyAI-SuperPrompt.md
-2. Paste it into a conversation with Claude or another AI assistant
-3. Fill in the details specific to your store needs
-4. The AI will generate code for a complete Shopify theme
-
-## Theme Structure
-
-The generated theme follows Shopify's recommended structure:
-
-```
-theme/
-├── assets/             # CSS, JavaScript, and other static assets
-├── config/             # Theme settings
-├── layout/             # Theme layouts (theme.liquid)
-├── locales/            # Translations
-├── sections/           # Reusable content sections
-├── snippets/           # Reusable code snippets
-└── templates/          # Page templates
-```
+A modern, responsive Shopify theme created with AI assistance. This theme includes all the essential components for a complete e-commerce store with clean design and best practices implemented throughout.
 
 ## Features
 
-The AI-generated theme includes:
+- **Modern Design**: Built with TailwindCSS for sleek, responsive UI
+- **Performance Focused**: Optimized for fast loading and smooth user experience
+- **SEO Ready**: Proper metadata structure and schema markup
+- **Accessible**: WCAG compliance for better accessibility
+- **Shopify 2.0 Compatible**: Utilizing Shopify's latest features and APIs
+- **Customizable**: Easy-to-modify theme settings for merchants
 
-- **Responsive Design**: Mobile-friendly layout with proper breakpoints
-- **Tailwind CSS Integration**: Modern utility-first CSS framework
-- **Accessibility Features**: Semantic HTML, ARIA attributes, and skip links
-- **Performance Optimizations**: Lazy loading, proper image handling
-- **E-commerce Best Practices**: Cart functionality, product displays, etc.
+## File Structure
 
-## Customizing Your Theme
+```
+├── assets/
+│   ├── theme.css     # Main CSS file
+│   ├── theme.js      # Main JavaScript file
+├── config/
+│   ├── settings_schema.json  # Theme settings configuration
+├── layout/
+│   ├── theme.liquid  # Main layout template
+├── sections/
+│   ├── cart-template.liquid          # Cart page section
+│   ├── collection-header.liquid      # Collection page header
+│   ├── collection-template.liquid    # Collection page content
+│   ├── featured-collection.liquid    # Featured products section
+│   ├── footer.liquid                 # Site footer
+│   ├── header.liquid                 # Site header
+│   ├── hero-banner.liquid            # Hero/banner section
+│   ├── product-recommendations.liquid # Product recommendations
+│   ├── product-template.liquid       # Product page template
+├── snippets/
+│   # Reusable code snippets
+├── templates/
+│   ├── cart.liquid        # Cart page
+│   ├── collection.liquid  # Collection pages
+│   ├── index.liquid       # Homepage
+│   ├── product.liquid     # Product page
+```
 
-After generating the base theme, you can:
+## Getting Started
 
-1. Edit section schemas to add more customization options
-2. Modify the CSS in `assets/theme.css` to match your brand
-3. Add additional templates for different page types
-4. Create custom snippets for reusable components
-5. Extend the JavaScript functionality in `assets/theme.js`
+### Prerequisites
 
-## Best Practices
+- Node.js (for local development)
+- Shopify CLI installed
+- A Shopify store (developer or partner account)
 
-When working with AI-generated Shopify themes:
+### Installation
 
-1. **Always validate** the generated code before deploying
-2. **Test thoroughly** on different devices and browsers
-3. **Optimize images** and assets for performance
-4. **Follow Shopify's guidelines** for theme development
-5. **Keep theme settings** well-organized and documented
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/nuwud/ai-shopify-theme-generator.git
+   cd ai-shopify-theme-generator
+   ```
+
+2. Use the provided shell script to create a new theme:
+   ```bash
+   ./create-shopify-theme.sh
+   ```
+
+3. Upload to your Shopify store:
+   ```bash
+   cd shopify_theme
+   shopify theme push --store=your-store.myshopify.com
+   ```
+
+4. Or develop locally with Theme Kit:
+   ```bash
+   shopify theme dev --store=your-store.myshopify.com
+   ```
+
+## Theme Configuration
+
+### Theme Settings
+
+The theme includes several customization options in the Shopify admin panel:
+
+1. **Colors**
+   - Primary color
+   - Secondary color
+   - Accent color
+   - Background color
+   - Text color
+
+2. **Typography**
+   - Heading font
+   - Body font
+   - Size scaling
+
+3. **Social Media**
+   - Social media account links
+
+4. **Layout Options**
+   - Header style
+   - Footer configuration
+   - Product grid layout
+
+## Key Components
+
+### Homepage
+
+The homepage includes:
+- Hero banner with customizable image, heading, subheading, and button
+- Featured collection with product cards
+- Additional sections can be added through the Shopify theme editor
+
+### Product Pages
+
+Product pages include:
+- Image gallery with thumbnails
+- Product details (title, price, description)
+- Variant selectors
+- Add to cart functionality
+- Dynamic checkout buttons
+- Product recommendations
+
+### Collection Pages
+
+Collection pages include:
+- Collection header with optional image and description
+- Product filtering and sorting
+- Responsive product grid
+- Pagination
+
+### Cart
+
+The cart page includes:
+- Line item display with images, titles, and prices
+- Quantity adjusters
+- Remove item functionality
+- Cart notes
+- Checkout button
 
 ## Contributing
 
@@ -96,6 +144,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Shopify for their excellent theme development platform
-- The Tailwind CSS team for their utility-first CSS framework
-- Claude AI for assistance in generating code and documentation
+- Created with assistance from AI (Claude)
+- Uses TailwindCSS for styling
+- Built for Shopify e-commerce platform

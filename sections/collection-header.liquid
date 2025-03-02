@@ -1,0 +1,52 @@
+<div class="bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto py-16 sm:py-24 lg:py-32 lg:max-w-none">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-extrabold text-gray-900">{{ collection.title }}</h1>
+        {% if section.settings.show_collection_description and collection.description != blank %}
+          <div class="mt-4 text-lg text-gray-500">
+            {{ collection.description }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.show_collection_image and collection.image %}
+        <div class="mt-8">
+          <div class="relative h-80 rounded-lg overflow-hidden bg-gray-100">
+            <img 
+              src="{{ collection.image | img_url: '1000x' }}" 
+              alt="{{ collection.title }}" 
+              class="w-full h-full object-center object-cover"
+            >
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show collection image",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Header",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

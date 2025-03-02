@@ -1,0 +1,303 @@
+<div class="bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="pt-6 pb-24">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
+        <!-- Filters -->
+        <div class="hidden lg:block">
+          <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+
+          {% for filter in collection.filters %}
+            <div class="mt-6">
+              <h3 class="text-sm font-medium text-gray-900">{{ filter.label }}</h3>
+              <div class="mt-2">
+                <div class="space-y-2">
+                  {% case filter.type %}
+                    {% when 'list' %}
+                      {% for filter_value in filter.values %}
+                        <div class="flex items-center">
+                          <input 
+                            id="filter-{{ filter.label | handleize }}-{{ forloop.index }}" 
+                            name="{{ filter.label | handleize }}" 
+                            value="{{ filter_value.value }}" 
+                            type="checkbox" 
+                            {% if filter_value.active %}checked{% endif %} 
+                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            data-filter-item
+                          >
+                          <label for="filter-{{ filter.label | handleize }}-{{ forloop.index }}" class="ml-3 text-sm text-gray-600">
+                            {{ filter_value.label }} ({{ filter_value.count }})
+                          </label>
+                        </div>
+                      {% endfor %}
+                    {% when 'price_range' %}
+                      <div>
+                        <div class="flex items-center space-x-3">
+                          <input 
+                            type="number" 
+                            name="filter.min_value.value" 
+                            id="filter.min_value.value" 
+                            placeholder="{{ filter.min_value.value }}"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            data-filter-price-min
+                          >
+                          <span class="text-gray-500">to</span>
+                          <input 
+                            type="number" 
+                            name="filter.max_value.value" 
+                            id="filter.max_value.value" 
+                            placeholder="{{ filter.max_value.value }}"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            data-filter-price-max
+                          >
+                        </div>
+                        <button 
+                          type="button" 
+                          class="mt-3 text-sm text-indigo-600 hover:text-indigo-500"
+                          data-filter-price-button
+                        >
+                          Apply
+                        </button>
+                      </div>
+                  {% endcase %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+          {% if collection.filters.size > 0 and collection.current_vendor or collection.current_type %}
+            <div class="mt-6">
+              <a href="{{ collection.url }}" class="text-sm text-indigo-600 hover:text-indigo-500">Clear all filters</a>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Product grid -->
+        <div class="lg:col-span-3">
+          {% if collection.products.size == 0 %}
+            <div class="text-center py-12">
+              <h2 class="text-2xl font-bold tracking-tight text-gray-900">No products found</h2>
+              <p class="mt-4 text-gray-500">Try adjusting your filters or search criteria.</p>
+            </div>
+          {% else %}
+            <!-- Mobile filter dialog toggle -->
+            <div class="flex items-center justify-between pb-6 border-b border-gray-200 lg:hidden">
+              <button type="button" class="inline-flex items-center text-sm font-medium text-gray-700" id="mobile-filter-button">
+                <svg class="mr-2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 01.628.74v2.288a2.25 2.25 0 01-.659 1.59l-4.682 4.683a2.25 2.25 0 00-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 018 18.25v-5.757a2.25 2.25 0 00-.659-1.59L2.659 6.22A2.25 2.25 0 012 4.629V2.34a.75.75 0 01.628-.74z" clip-rule="evenodd" />
+                </svg>
+                Filters
+              </button>
+              <div class="flex">
+                <select id="sort-by" class="block w-full rounded-md border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                  <option value="manual">Featured</option>
+                  <option value="best-selling">Best selling</option>
+                  <option value="title-ascending">Alphabetically, A-Z</option>
+                  <option value="title-descending">Alphabetically, Z-A</option>
+                  <option value="price-ascending">Price, low to high</option>
+                  <option value="price-descending">Price, high to low</option>
+                  <option value="created-ascending">Date, old to new</option>
+                  <option value="created-descending">Date, new to old</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Products -->
+            <div class="mt-8 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-{{ section.settings.products_per_row }} xl:gap-x-8">
+              {% for product in collection.products %}
+                <div class="group relative product-card">
+                  <div class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                    <img 
+                      src="{{ product.featured_image | img_url: '500x500', crop: 'center' }}" 
+                      alt="{{ product.featured_image.alt }}" 
+                      class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                    >
+                  </div>
+                  <div class="mt-4 flex justify-between">
+                    <div>
+                      <h3 class="text-sm text-gray-700">
+                        <a href="{{ product.url }}">
+                          <span aria-hidden="true" class="absolute inset-0"></span>
+                          {{ product.title }}
+                        </a>
+                      </h3>
+                      {% if section.settings.show_vendor and product.vendor %}
+                        <p class="mt-1 text-sm text-gray-500">{{ product.vendor }}</p>
+                      {% endif %}
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">
+                        {% if product.compare_at_price > product.price %}
+                          <span class="text-red-500">{{ product.price | money }}</span>
+                          <span class="text-gray-500 line-through text-xs ml-1">{{ product.compare_at_price | money }}</span>
+                        {% else %}
+                          {{ product.price | money }}
+                        {% endif %}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if paginate.pages > 1 %}
+              <div class="py-10">
+                <div class="flex justify-between items-center">
+                  <div>
+                    {% if paginate.previous %}
+                      <a href="{{ paginate.previous.url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                      </a>
+                    {% else %}
+                      <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white cursor-not-allowed">
+                        Previous
+                      </span>
+                    {% endif %}
+                  </div>
+
+                  <div class="hidden md:flex">
+                    {% for part in paginate.parts %}
+                      {% if part.is_link %}
+                        <a href="{{ part.url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                          {{ part.title }}
+                        </a>
+                      {% else %}
+                        <span class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600">
+                          {{ part.title }}
+                        </span>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+
+                  <div>
+                    {% if paginate.next %}
+                      <a href="{{ paginate.next.url }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                      </a>
+                    {% else %}
+                      <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white cursor-not-allowed">
+                        Next
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Sort functionality
+    const sortSelector = document.getElementById('sort-by');
+    if (sortSelector) {
+      // Set the initial value based on current sort order
+      const currentSort = window.location.search.match(/sort_by=([^&]*)/);
+      if (currentSort && currentSort[1]) {
+        sortSelector.value = currentSort[1];
+      }
+
+      // Add change event listener
+      sortSelector.addEventListener('change', function() {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort_by', this.value);
+        window.location.href = url.toString();
+      });
+    }
+
+    // Mobile filter dialog
+    const mobileFilterButton = document.getElementById('mobile-filter-button');
+    if (mobileFilterButton) {
+      // Add mobile filter functionality here
+      // This would typically open a modal or slide-in panel with filters
+    }
+
+    // Filter functionality
+    const filterItems = document.querySelectorAll('[data-filter-item]');
+    filterItems.forEach(item => {
+      item.addEventListener('change', function() {
+        // Handle filter changes
+        // This would typically update the URL with the selected filters
+      });
+    });
+
+    // Price range filter
+    const priceButton = document.querySelector('[data-filter-price-button]');
+    if (priceButton) {
+      priceButton.addEventListener('click', function() {
+        const minInput = document.querySelector('[data-filter-price-min]');
+        const maxInput = document.querySelector('[data-filter-price-max]');
+        
+        // Update URL with price filter
+        const url = new URL(window.location.href);
+        if (minInput.value) {
+          url.searchParams.set('filter.v.price.gte', minInput.value);
+        } else {
+          url.searchParams.delete('filter.v.price.gte');
+        }
+        
+        if (maxInput.value) {
+          url.searchParams.set('filter.v.price.lte', maxInput.value);
+        } else {
+          url.searchParams.delete('filter.v.price.lte');
+        }
+        
+        window.location.href = url.toString();
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Template",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 8,
+      "max": 48,
+      "step": 8,
+      "label": "Products per page",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Products per row",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "Enable filtering",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "label": "Enable sorting",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Template",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
